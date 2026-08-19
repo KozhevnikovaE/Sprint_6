@@ -8,7 +8,7 @@ class MainPage(BasePage):
     # Локаторы
     COOKIE_BUTTON = (By.ID, "rcc-confirm-button")
     ORDER_BUTTON_TOP = (By.CLASS_NAME, "Button_Button__ra12g")
-    ORDER_BUTTON_TOP = (By.CSS_SELECTOR, 'button[class*="Button"]')
+    ORDER_BUTTON_BOTTOM = (By.CSS_SELECTOR, 'button[class*="Button"]')
     FAQ_QUESTIONS = (By.CSS_SELECTOR, '.accordion__button')
     LOGO_SAMOKAT = (By.CSS_SELECTOR, 'a img[alt="Scooter"]')
     LOGO_YANDEX = (By.CSS_SELECTOR, 'a img[alt="Yandex"]')

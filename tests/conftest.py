@@ -5,6 +5,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
 from pages.main_page import MainPage
+from pages.order_page import OrderPage
 
 @pytest.fixture(scope="function")
 def driver():
@@ -22,7 +23,12 @@ def driver():
 
 @pytest.fixture
 def main_page(driver):
-    main_page = MainPage(driver)
-    main_page.open()
-    main_page.accept_cookies()
-    return main_page
+    page = MainPage(driver)
+    page.open()
+    page.accept_cookies()
+    return page
+
+@pytest.fixture
+def order_page(driver, main_page):
+    return OrderPage(driver)
+
