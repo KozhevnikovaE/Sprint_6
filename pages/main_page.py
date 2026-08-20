@@ -19,7 +19,6 @@ class MainPage(BasePage):
     @allure.step("Открыть главную страницу")
     def open(self):
         self.get_url(BASE_URL)
-        return self
 
     @allure.step("Принять cookies")
     def accept_cookies(self):
@@ -28,7 +27,7 @@ class MainPage(BasePage):
             self.click_element(self.COOKIE_BUTTON)
         except Exception:
             pass
-        return self
+
 
     @allure.step("Нажать кнопку заказа вверху страницы")
     def click_order_button_top(self):
@@ -39,7 +38,7 @@ class MainPage(BasePage):
         button = self.find_element(self.ORDER_BUTTON_BOTTOM)
         self.scroll_to_element(button)
         self.click_element(self.ORDER_BUTTON_BOTTOM)
-        return self
+
 
     @allure.step("Кликнуть на вопрос")
     def click_faq_question(self, index):
@@ -47,7 +46,7 @@ class MainPage(BasePage):
         question = questions[index]
         self.scroll_to_element(question)
         self.driver.execute_script("arguments[0].click();", question)
-        return self
+
 
     @allure.step("Получить ответ на вопрос")
     def get_faq_answer(self, index):
@@ -58,12 +57,12 @@ class MainPage(BasePage):
     @allure.step("Кликнуть на логотип 'Самокат'")
     def click_samokat_logo(self):
         self.click_element(self.LOGO_SAMOKAT)
-        return self
+
     
     @allure.step("Кликнуть на логотип 'Яндекс'")
     def click_yandex_logo(self):
         self.click_element(self.LOGO_YANDEX)
-        return self
+
 
 
     @allure.step("Дождаться перехода на главную страницу")
