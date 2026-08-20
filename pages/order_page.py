@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 import time
+import allure
 
 class OrderPage(BasePage):
     NAME_INPUT = (By.XPATH, "//input[@placeholder='* Имя']")
@@ -20,6 +21,7 @@ class OrderPage(BasePage):
 
     ORDER_SUCCESS_TITLE = (By.XPATH, "//div[contains(@class, 'Order_ModalHeader') and text()='Заказ оформлен']")
 
+    @allure.step("Заполнить первую форму заказа")
     def fill_first_form(self, name, surname, address, metro, phone):
         self.send_keys(*self.NAME_INPUT, name)
         self.send_keys(*self.SURNAME_INPUT, surname)
@@ -32,6 +34,7 @@ class OrderPage(BasePage):
         self.send_keys(*self.PHONE_INPUT, phone)
         self.click_element(self.NEXT_BUTTON)
 
+    @allure.step("Заполнить вторую форму заказа")
     def fill_second_form(self, date, comment, color):
         self.click_element(self.DATE_INPUT)
         self.send_keys(*self.DATE_INPUT, date)
@@ -48,12 +51,15 @@ class OrderPage(BasePage):
 
         self.send_keys(*self.COMMENT_INPUT, comment)
 
+    @allure.step("Нажать кнопку 'Заказать'")
     def click_order_button(self):
         self.click_element(*self.ORDER_BUTTON)
 
+    @allure.step("Подтвердить заказ")
     def confirm_order(self):
         print("✓ Заказ оформлен (пропускаем кнопку Да)")
 
+    @allure.step("Проверить, что заказ успешно оформлен")
     def is_order_success(self):
         try:
             return self.wait.until(EC.visibility_of_element_located(self.ORDER_SUCCESS_TITLE))

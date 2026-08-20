@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
+import allure
 
 BASE_URL = "https://qa-scooter.praktikum-services.ru/"
 
@@ -15,11 +16,12 @@ class MainPage(BasePage):
     LOGO_SAMOKAT = (By.CSS_SELECTOR, 'a img[alt="Scooter"]')
     LOGO_YANDEX = (By.CSS_SELECTOR, 'a img[alt="Yandex"]')
 
-
+    @allure.step("Открыть главную страницу")
     def open(self):
-        self.driver.get(BASE_URL)
+        self.get_url(BASE_URL)
         return self
 
+    @allure.step("Принять cookies")
     def accept_cookies(self):
         """Нажимает кнопку куки, если она есть. Не падает, если её нет."""
         try:
@@ -28,15 +30,18 @@ class MainPage(BasePage):
             pass
         return self
 
+    @allure.step("Нажать кнопку заказа вверху страницы")
     def click_order_button_top(self):
         self.click_element(self.ORDER_BUTTON_TOP)
 
+    @allure.step("Нажать кнопку заказа внизу страницы")
     def click_order_button_bottom(self):
         button = self.find_element(self.ORDER_BUTTON_BOTTOM)
         self.scroll_to_element(button)
         self.click_element(self.ORDER_BUTTON_BOTTOM)
         return self
 
+    @allure.step("Кликнуть на вопрос")
     def click_faq_question(self, index):
         questions = self.find_elements(self.FAQ_QUESTIONS)
         question = questions[index]
@@ -44,30 +49,36 @@ class MainPage(BasePage):
         self.driver.execute_script("arguments[0].click();", question)
         return self
 
+    @allure.step("Получить ответ на вопрос")
     def get_faq_answer(self, index):
         answer_locator = (By.XPATH, f"//div[@id='accordion__panel-{index}']/p")
         answer = self.wait.until(EC.visibility_of_element_located(answer_locator))
         return answer.text
 
+    @allure.step("Кликнуть на логотип 'Самокат'")
     def click_samokat_logo(self):
         self.click_element(self.LOGO_SAMOKAT)
         return self
     
+    @allure.step("Кликнуть на логотип 'Яндекс'")
     def click_yandex_logo(self):
         self.click_element(self.LOGO_YANDEX)
         return self
 
 
+    @allure.step("Дождаться перехода на главную страницу")
     def wait_for_main_url(self, timeout=5):
         return WebDriverWait(self.driver, timeout).until(EC.url_to_be(BASE_URL))
 
+    @allure.step("Кликнуть логотип Яндекса и переключиться на Дзен")
     def click_yandex_logo_and_switch_to_dzen(self, timeout=10):
         self.click_yandex_logo()
-        tabs = self.driver.window_handles
-        self.driver.switch_to.window(tabs[1])
+        tabs = self.get_window_handles()
+        self.switch_to_window(tabs[1])
         return WebDriverWait(self.driver, timeout).until(EC.url_contains("dzen.ru"))
 
+    @allure.step("Закрыть вкладку Дзена и вернуться обратно")
     def close_extra_tab_and_return(self):
-        tabs = self.driver.window_handles
-        self.driver.close()
-        self.driver.switch_to.window(tabs[0])
+        tabs = self.get_window_handles()
+        self.close_window()
+        self.switch_to_window(tabs[0])
