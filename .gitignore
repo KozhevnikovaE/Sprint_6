@@ -223,3 +223,4 @@ venv/
 .vscode/
 geckodriver*
 chromedriver*
+allure-results/
