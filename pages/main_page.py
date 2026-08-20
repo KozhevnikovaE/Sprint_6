@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
-from tests.url import BASE_URL
+
+BASE_URL = "https://qa-scooter.praktikum-services.ru/"
 
 
 class MainPage(BasePage):
@@ -39,7 +41,6 @@ class MainPage(BasePage):
         questions = self.find_elements(self.FAQ_QUESTIONS)
         question = questions[index]
         self.scroll_to_element(question)
-        
         self.driver.execute_script("arguments[0].click();", question)
         return self
 
@@ -55,3 +56,18 @@ class MainPage(BasePage):
     def click_yandex_logo(self):
         self.click_element(self.LOGO_YANDEX)
         return self
+
+
+    def wait_for_main_url(self, timeout=5):
+        return WebDriverWait(self.driver, timeout).until(EC.url_to_be(BASE_URL))
+
+    def click_yandex_logo_and_switch_to_dzen(self, timeout=10):
+        self.click_yandex_logo()
+        tabs = self.driver.window_handles
+        self.driver.switch_to.window(tabs[1])
+        return WebDriverWait(self.driver, timeout).until(EC.url_contains("dzen.ru"))
+
+    def close_extra_tab_and_return(self):
+        tabs = self.driver.window_handles
+        self.driver.close()
+        self.driver.switch_to.window(tabs[0])
