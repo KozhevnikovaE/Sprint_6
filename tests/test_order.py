@@ -1,6 +1,6 @@
 import allure
 import pytest
-from tests.data import ORDER_DATA
+from tests.conftest import ORDER_DATA
 from pages.order_page import OrderPage
 
 @allure.story("Тесты заказа самоката")

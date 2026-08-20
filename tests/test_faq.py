@@ -1,6 +1,6 @@
 import allure
 import pytest
-from tests.data import FAQ_DATA
+from tests.conftest import FAQ_DATA
 
 @allure.story("Тесты раздела 'Вопросы о важном'")
 class TestFAQ:
