@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+venv/
+#allure-results/
+#allure-report/
+.vscode/
+geckodriver*
+chromedriver*
+allure-results/

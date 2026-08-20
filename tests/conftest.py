@@ -1,0 +1,84 @@
+import pytest
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
+from pages.main_page import MainPage
+from pages.order_page import OrderPage
+
+BASE_URL = "https://qa-scooter.praktikum-services.ru/"
+
+# Данные для FAQ (8 вопросов и ответов)
+FAQ_DATA = [
+    ("Сколько это стоит? И как оплатить?",
+     "Сутки — 400 рублей. Оплата курьеру — наличными или картой."),
+    ("Хочу сразу несколько самокатов! Так можно?",
+     "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим."),
+    ("Как рассчитывается время аренды?",
+     "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привозили самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30."),
+    ("Можно ли продлить заказ или вернуть раньше?",
+     "Только начиная с завтрашнего дня. Но скоро станем расторопнее."),
+    ("Вы привозите зарядку вместе с самокатом?",
+     "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010."),
+    ("Можно ли отменить заказ?",
+     "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится."),
+    ("Я живу за МКАДом, вы привезёте?",
+     "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои."),
+    ("У меня есть самокат, могу ли я сдать его в аренду?",
+     "Да, обязательно. Всем самокатов! И Москве, и Московской области.")
+]
+
+# Тестовые данные для заказа (2 набора)
+ORDER_DATA = [
+    {
+        "name": "Иван",
+        "surname": "Петров",
+        "address": "ул. Ленина, 1",
+        "metro": "Сокольники",
+        "phone": "+78888888888",
+        "date": "25.08.2026",
+        "rental_days": "двое суток",
+        "color": "black",
+        "comment": "Привезти до 12:00"
+    },
+    {
+        "name": "Мария",
+        "surname": "Сидорова",
+        "address": "ул. Пушкина, 10",
+        "metro": "Комсомольская",
+        "phone": "+79999999999",
+        "date": "21.08.2026",
+        "rental_days": "шестеро суток",
+        "color": "grey",
+        "comment": "Позвонить за час"
+    }
+]
+
+
+@pytest.fixture(scope="function")
+def driver():
+    options = Options()
+    options.binary_location = r"C:\Users\ivank\AppData\Local\Mozilla Firefox\firefox.exe"
+    from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+    profile = FirefoxProfile()
+    options.profile = profile
+
+    service = Service(GeckoDriverManager().install())
+    driver = webdriver.Firefox(service=service, options=options)
+    yield driver
+    driver.quit()
+
+
+@pytest.fixture
+def main_page(driver):
+    page = MainPage(driver)
+    page.open()
+    page.accept_cookies()
+    return page
+
+
+@pytest.fixture
+def order_page(driver, main_page):
+    return OrderPage(driver)
+
+
