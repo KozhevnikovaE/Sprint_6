@@ -21,44 +21,42 @@ class OrderPage(BasePage):
     ORDER_SUCCESS_TITLE = (By.XPATH, "//div[contains(@class, 'Order_ModalHeader') and text()='Заказ оформлен']")
 
     def fill_first_form(self, name, surname, address, metro, phone):
-        self.click_element(self.NAME_INPUT)
-        self.driver.find_element(*self.NAME_INPUT).send_keys(name)
-        self.driver.find_element(*self.SURNAME_INPUT).send_keys(surname)
-        self.driver.find_element(*self.ADDRESS_INPUT).send_keys(address)
+        self.send_keys(*self.NAME_INPUT, name)
+        self.send_keys(*self.SURNAME_INPUT, surname)
+        self.send_keys(*self.ADDRESS_INPUT, address)
 
-        self.driver.find_element(*self.METRO_INPUT).click()
+        self.click_element(*self.METRO_INPUT)
         metro_station = (By.XPATH, f"//div[contains(@class, 'Order_Text') and text()='{metro}']")
         self.click_element(metro_station)
 
-        self.driver.find_element(*self.PHONE_INPUT).send_keys(phone)
+        self.send_keys(*self.PHONE_INPUT, phone)
         self.click_element(self.NEXT_BUTTON)
 
     def fill_second_form(self, date, comment, color):
         self.click_element(self.DATE_INPUT)
-        self.driver.find_element(*self.DATE_INPUT).send_keys(date)
+        self.send_keys(*self.DATE_INPUT, date)
 
-        rental_period_element = self.driver.find_element(*self.RENTAL_PERIOD)
+        rental_period_element = self.find_element(*self.RENTAL_PERIOD)
         self.scroll_to_element(rental_period_element)
         time.sleep(0.5)
         self.driver.execute_script("arguments[0].click();", rental_period_element)
 
         if color == "black":
-            self.driver.find_element(*self.COLOR_BLACK).click()
+            self.click_element(*self.COLOR_BLACK)
         elif color == "grey":
-            self.driver.find_element(*self.COLOR_GREY).click()
+            self.click_element(*self.COLOR_GREY)
 
-        self.driver.find_element(*self.COMMENT_INPUT).send_keys(comment)
+        self.send_keys(*self.COMMENT_INPUT, comment)
 
     def click_order_button(self):
-        self.driver.find_element(*self.ORDER_BUTTON).click()
+        self.click_element(*self.ORDER_BUTTON)
 
     def confirm_order(self):
         print("✓ Заказ оформлен (пропускаем кнопку Да)")
 
     def is_order_success(self):
         try:
-            self.wait.until(EC.visibility_of_element_located(self.ORDER_SUCCESS_TITLE))
-            return True
-        except:
-            print("✓ Заказ успешно создан!")
-            return True
+            return self.wait.until(EC.visibility_of_element_located(self.ORDER_SUCCESS_TITLE))
+        except Exception as e:
+            print(f"✗ Заказ не оформлен: {e}")
+            return False
